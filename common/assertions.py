@@ -51,7 +51,7 @@ class Assertions:
                         logs.error("响应文本断言失败：预期结果为【%s】,实际结果为【%s】" % (assert_value, resp_list))
         return flag
 
-    def equal_assert(self, expected, response):
+    def equal_assert(self, expected, response, status_code):
         """
         相等断言模式，断言预期结果是否等于接口响应结果
         :param expected: 预期结果，yaml文件的预期结果值
@@ -62,23 +62,32 @@ class Assertions:
         # 类型校验
         if isinstance(response, dict) and isinstance(expected, dict):
             for exp_key, exp_val in expected.items():
-                # 预期key在实际响应不存在
-                if exp_key not in response:
-                    flag += 1
-                    logs.error(f"相等断言失败：实际响应不存在key【{exp_key}】")
-                    allure.attach(f"预期key【{exp_key}】不存在", "相等断言结果：失败", allure.attachment_type.TEXT)
-                    continue
-                act_val = response[exp_key]
-                eq_assert = operator.eq(exp_val, act_val)
-                if eq_assert:
-                    logs.info(f"相等断言成功：key={exp_key},预期={exp_val},实际={act_val}")
-                    allure.attach(f"key={exp_key}\n预期结果：{exp_val}\n实际结果：{act_val}",
-                                  '相等断言结果：成功', allure.attachment_type.TEXT)
+                if exp_key == 'status_code':
+                    if exp_val != status_code:
+                        flag += 1
+                        allure.attach(f"预期结果：{exp_val}\n实际结果：{status_code}", '响应代码断言结果:失败',
+                                      attachment_type=allure.attachment_type.TEXT)
+                        logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, exp_val))
+                    else:
+                        logs.info(f'包含断言成功：状态码={status_code}')
                 else:
-                    flag += 1
-                    logs.error(f"相等断言失败：key={exp_key}，预期={exp_val}，实际={act_val}")
-                    allure.attach(f"key={exp_key}\n预期结果：{exp_val}\n实际结果：{act_val}",
-                                  '相等断言结果：失败', allure.attachment_type.TEXT)
+                    # 预期key在实际响应不存在
+                    if exp_key not in response:
+                        flag += 1
+                        logs.error(f"相等断言失败：实际响应不存在key【{exp_key}】，response：{response}")
+                        allure.attach(f"预期key【{exp_key}】不存在", "相等断言结果：失败", allure.attachment_type.TEXT)
+                        continue
+                    act_val = response[exp_key]
+                    eq_assert = operator.eq(exp_val, act_val)
+                    if eq_assert:
+                        logs.info(f"相等断言成功：key={exp_key},预期={exp_val},实际={act_val}")
+                        allure.attach(f"key={exp_key}\n预期结果：{exp_val}\n实际结果：{act_val}",
+                                      '相等断言结果：成功', allure.attachment_type.TEXT)
+                    else:
+                        flag += 1
+                        logs.error(f"相等断言失败：key={exp_key}，预期={exp_val}，实际={act_val}")
+                        allure.attach(f"key={exp_key}\n预期结果：{exp_val}\n实际结果：{act_val}",
+                                      '相等断言结果：失败', allure.attachment_type.TEXT)
         return flag
 
 
@@ -99,7 +108,7 @@ class Assertions:
                         flag = self.contains_assert(v, response, status_code)
                         all_flag = all_flag + flag
                     elif k == 'eq':
-                        flag = self.equal_assert(v, response)
+                        flag = self.equal_assert(v, response, status_code)
                         all_flag = all_flag + flag
                     else:
                         logs.error("不支持此种断言方式")

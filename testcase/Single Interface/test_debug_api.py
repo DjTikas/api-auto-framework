@@ -14,3 +14,10 @@ class TestUserManager:
     def test_add_user(self, base_info, testcase):
         allure.dynamic.title(testcase['case_name'])
         RequestBase().specification_yaml(base_info, testcase)
+
+    @allure.story("查询用户")
+    @pytest.mark.run(order=2)
+    @pytest.mark.parametrize('base_info, testcase', get_testcase_yaml('testcase/Single Interface/queryUser.yaml'))
+    def test_query_user(self, base_info, testcase):
+        allure.dynamic.title(testcase['case_name'])
+        RequestBase().specification_yaml(base_info, testcase)

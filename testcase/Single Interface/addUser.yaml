@@ -14,7 +14,7 @@
         phone: 13800000000
         token: ${get_extract_data(token)}
       validation:
-        - contains: { status_code: 200 }
+        - eq: { status_code: 200 }
         - contains: { msg: '新增成功'}
     - case_name: 无效新增-缺少token
       data:
@@ -24,7 +24,7 @@
         dates: '2026-5-31'
         phone: 13800000000
       validation:
-        - contains: { status_code: 200 }
+        - eq: { status_code: 200 }
         - contains: { msg: '新增失败'}
         - eq: { msg_code: 9001 }
     - case_name: 无效新增-缺少必填参数username
@@ -35,7 +35,7 @@
         phone: 13800000000
         token: ${get_extract_data(token)}
       validation:
-        - contains: { status_code: 200 }
+        - eq: { status_code: 200 }
         - contains: { msg: '新增失败'}
         - eq: { msg_code: 9001 }
     - case_name: 无效新增-缺少必填参数role_id
@@ -46,6 +46,6 @@
         phone: 13800000000
         token: ${get_extract_data(token)}
       validation:
-        - contains: { status_code: 200 }
+        - eq: { status_code: 200 }
         - contains: { msg: '新增失败'}
         - eq: { msg_code: 9001 }

@@ -1,0 +1,12 @@
+- base_info:
+    api_name: 查询用户
+    url: /dar/user/queryUser
+    method: POST
+    headers:
+      Content-Type: application/x-www-form-urlencoded;charset=UTF-8
+  test_case:
+    - case_name: 有效查询用户
+      data:
+        user_id: 123839387391912
+      validation:
+        - contains: { msg: '查询成功'}
