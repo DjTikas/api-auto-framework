@@ -66,7 +66,7 @@ class ReadYamlData:
         try:
             with open(file_path, "w", encoding="utf-8") as f:
                 yaml.safe_dump(old_data, f, allow_unicode=True, sort_keys=False)
-            logs.info(f"写入yaml成功：{value}")
+            # logs.info(f"写入yaml成功：{value}")
             return True
         except Exception:
             logs.error(f"写入yaml失败：{traceback.format_exc()}")

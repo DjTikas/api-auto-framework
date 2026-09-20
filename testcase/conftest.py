@@ -5,7 +5,7 @@ from base.apiutil import RequestBase
 from common.recordlog import logs
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(autouse=True)
 def start_test_and_end():
     logs.info('-------------接口测试开始--------------')
     yield
