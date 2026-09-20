@@ -49,6 +49,7 @@ class RequestBase:
             data = json.loads(str_data)
         else:
             data = str_data
+        logs.info(f'热加载数据：{data}')
         return data
 
     def specification_yaml(self, base_info, test_case):

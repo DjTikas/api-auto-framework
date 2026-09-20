@@ -23,3 +23,11 @@ class TestProductManager:
     def test_get_product_detail(self, base_info, testcase):
         allure.dynamic.title(testcase['case_name'])
         RequestBase().specification_yaml(base_info, testcase)
+
+
+    @allure.story(next(c_id) + '提交订单')
+    @pytest.mark.run(order=3)
+    @pytest.mark.parametrize('base_info, testcase', get_testcase_yaml('testcase/Product Manager/commitOrder.yaml'))
+    def test_get_commit_order(self, base_info, testcase):
+        allure.dynamic.title(testcase['case_name'])
+        RequestBase().specification_yaml(base_info, testcase)
