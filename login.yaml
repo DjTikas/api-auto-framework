@@ -1,0 +1,14 @@
+- base_info:
+    api_name: 用户登录
+    url: /dar/user/login
+    method: post
+    headers:
+      Content-Type: application/x-www-form-urlencoded;charset=UTF-8
+  test_case:
+    - case_name: 用户名和密码错误
+      data:
+        user_name: test01
+        passwd: admin1234
+      validation:
+        - contains: { msg: '用户名或密码错误' }
+        - eq: { msg_code: 9001 }

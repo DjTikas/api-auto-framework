@@ -1,0 +1,40 @@
+卷 D: 的文件夹 PATH 列表
+卷序列号为 E832-6105
+D:.
+│  conftest.py
+│  project_tree.txt
+│  pytest.ini
+│  run.py
+│  __init__.py
+│  
+├─.idea
+│  │  .gitignore
+│  │  encodings.xml
+│  │  misc.xml
+│  │  modules.xml
+│  │  my_api_test.iml
+│  │  vcs.xml
+│  │  workspace.xml
+│  │  
+│  └─inspectionProfiles
+│          profiles_settings.xml
+│          Project_Default.xml
+│          
+├─base
+│      apiutil.py
+│      __init__.py
+│      
+├─common
+│      __init__.py
+│      
+├─conf
+│      __init__.py
+│      
+├─data
+│      __init__.py
+│      
+├─logs
+├─report
+└─testcase
+        __init__.py
+        
