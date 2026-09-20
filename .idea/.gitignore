@@ -39,3 +39,7 @@ build/
 
 # Windows系统文件
 Thumbs.db
+
+# 经常变动的文件夹
+.logs/
+.report/
