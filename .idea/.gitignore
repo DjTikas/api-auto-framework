@@ -43,4 +43,4 @@ Thumbs.db
 # 经常变动的文件夹
 .logs/
 .report/
-.report/temp/
+.report/temp/*
