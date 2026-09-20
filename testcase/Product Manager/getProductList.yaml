@@ -4,6 +4,7 @@
     method: GET
     headers:
       Content-Type: application/x-www-form-urlencoded;charset=UTF-8
+      token: ${get_extract_data(Cookies)}
   test_case:
     - case_name: 获取商品列表
       params:
