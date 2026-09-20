@@ -28,31 +28,27 @@ class Assertions:
         # 断言状态标识，0成功，其他失败
         flag = 0
         for assert_key, assert_value in expected.items():
-            # 兼容 yaml写 none/NONE，自动转为Python原生None
-            assert_value = None if str(assert_value).upper() == 'NONE' else assert_value
             if assert_key == 'status_code':
                 if assert_value != status_code:
                     flag += 1
-            else:
-                resp_result = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                # 重点修复：jsonpath找不到返回False，直接判空
-                if not resp_result:
-                    flag += 1
-                    allure.attach(
-                        f"jsonpath未匹配到字段【{assert_key}】",
-                        '响应文本断言结果：失败',
-                        attachment_type=allure.attachment_type.TEXT
-                    )
-                    logs.error(f"响应文本断言失败：jsonpath找不到字段【{assert_key}】")
-                    continue
-
-                # 判断是否命中
-                if assert_value in resp_result:
-                    logs.info(f"{assert_key} 断言成功")
+                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
+                                  attachment_type=allure.attachment_type.TEXT)
+                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
                 else:
-                    flag += 1
-                    allure.attach(f"预期包含：{assert_value}，实际值：{resp_result}", f"{assert_key}断言失败",
-                                  allure.attachment_type.TEXT)
+                    logs.info(f'包含断言成功：状态码={status_code}')
+            else:
+                resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
+                if isinstance(resp_list[0], str):
+                    resp_list = ''.join(resp_list)
+                if resp_list:
+                    assert_value = None if assert_value.upper() == 'NONE' else assert_value
+                    if assert_value in resp_list:
+                        logs.info("字符串包含断言成功：预期结果【%s】,实际结果【%s】" % (assert_value, resp_list))
+                    else:
+                        flag = flag + 1
+                        allure.attach(f"预期结果：{assert_value}\n实际结果：{resp_list}", '响应文本断言结果：失败',
+                                      attachment_type=allure.attachment_type.TEXT)
+                        logs.error("响应文本断言失败：预期结果为【%s】,实际结果为【%s】" % (assert_value, resp_list))
         return flag
 
     def equal_assert(self, expected, response):
@@ -83,7 +79,7 @@ class Assertions:
                     logs.error(f"相等断言失败：key={exp_key}，预期={exp_val}，实际={act_val}")
                     allure.attach(f"key={exp_key}\n预期结果：{exp_val}\n实际结果：{act_val}",
                                   '相等断言结果：失败', allure.attachment_type.TEXT)
-            return flag
+        return flag
 
 
     def assert_result(self, expected, response, status_code):
