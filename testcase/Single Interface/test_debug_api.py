@@ -23,6 +23,13 @@ class TestUserManager:
         allure.dynamic.title(testcase['case_name'])
         RequestBase().specification_yaml(base_info, testcase)
 
+    @allure.story(next(c_id) + "删除用户")
+    @pytest.mark.run(order=3)
+    @pytest.mark.parametrize('base_info,testcase', get_testcase_yaml('testcase/Single Interface/deleteUser.yaml'))
+    def test_delete_user(self, base_info, testcase):
+        allure.dynamic.title(testcase['case_name'])
+        RequestBase().specification_yaml(base_info, testcase)
+
     @allure.story(next(c_id) + "查询用户")
     @pytest.mark.run(order=4)
     @pytest.mark.parametrize('base_info, testcase', get_testcase_yaml('testcase/Single Interface/queryUser.yaml'))
