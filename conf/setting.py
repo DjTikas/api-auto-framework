@@ -14,6 +14,9 @@ STREAM_LOG_LEVEL = logging.DEBUG  # 控制台
 # 接口超时时间，单位/s
 API_TIMEOUT = 60
 
+# 是否发送钉钉消息
+dd_msg = True
+
 # 文件路径
 FILE_PATH = {
     'CONFIG': os.path.join(DIR_BASE, 'conf/config.ini'),
