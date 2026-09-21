@@ -16,6 +16,7 @@ from conf.setting import FILE_PATH
 
 
 class RequestBase:
+    """用于完成单接口的请求"""
 
     def __init__(self):
         self.read = ReadYamlData()
