@@ -1,5 +1,6 @@
 import random
 import re
+import time
 
 from common.readyaml import ReadYamlData
 
@@ -34,3 +35,8 @@ class DebugTalk:
         """获取extract.yaml数据，不为0、-1、-2，则按顺序读取文件key的数据"""
         if randoms not in [0, -1, -2]:
             return data[randoms - 1]
+
+    def timestamp(self):
+        """获取当前时间戳，10位"""
+        t = int(time.time())
+        return t
