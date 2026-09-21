@@ -34,7 +34,7 @@ class Assertions:
                     flag += 1
                     allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
                                   attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
+                    logs.error("包含断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
                 else:
                     logs.info(f'包含断言成功：状态码={status_code}')
             else:
@@ -68,9 +68,9 @@ class Assertions:
                         flag += 1
                         allure.attach(f"预期结果：{exp_val}\n实际结果：{status_code}", '响应代码断言结果:失败',
                                       attachment_type=allure.attachment_type.TEXT)
-                        logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, exp_val))
+                        logs.error("相等断言失败：接口返回码【%s】不等于【%s】" % (status_code, exp_val))
                     else:
-                        logs.info(f'包含断言成功：状态码={status_code}')
+                        logs.info(f'相等断言成功：状态码={status_code}')
                 else:
                     # 预期key在实际响应不存在
                     if exp_key not in response:
@@ -89,6 +89,45 @@ class Assertions:
                         logs.error(f"相等断言失败：key={exp_key}，预期={exp_val}，实际={act_val}")
                         allure.attach(f"key={exp_key}\n预期结果：{exp_val}\n实际结果：{act_val}",
                                       '相等断言结果：失败', allure.attachment_type.TEXT)
+        return flag
+
+    def not_equal_assert(self, expected, response, status_code):
+        """
+        不相等断言模式，断言预期结果是否等于接口响应结果
+        :param expected: 预期结果，yaml文件的预期结果值
+        :param response: 接口实际响应结果
+        :return: 返回结果的状态标识
+        """
+        flag = 0
+        # 类型校验
+        if isinstance(response, dict) and isinstance(expected, dict):
+            for exp_key, exp_val in expected.items():
+                if exp_key == 'status_code':
+                    if exp_val == status_code:
+                        flag += 1
+                        allure.attach(f"预期结果：{exp_val}\n实际结果：{status_code}", '响应代码断言结果:失败',
+                                      attachment_type=allure.attachment_type.TEXT)
+                        logs.error("不相等断言失败：接口返回码【%s】等于【%s】" % (status_code, exp_val))
+                    else:
+                        logs.info(f'状态码不相等断言成功')
+                else:
+                    # 预期key在实际响应不存在
+                    if exp_key not in response:
+                        flag += 1
+                        logs.error(f"不相等断言失败：实际响应不存在key【{exp_key}】，response：{response}")
+                        allure.attach(f"预期key【{exp_key}】不存在", "不相等断言结果：失败", allure.attachment_type.TEXT)
+                        continue
+                    act_val = response[exp_key]
+                    eq_assert = operator.ne(exp_val, act_val)
+                    if eq_assert:
+                        logs.info(f"不相等断言成功：key={exp_key},预期={exp_val},实际={act_val}")
+                        allure.attach(f"key={exp_key}\n预期结果：{exp_val}\n实际结果：{act_val}",
+                                      '不相等断言结果：成功', allure.attachment_type.TEXT)
+                    else:
+                        flag += 1
+                        logs.error(f"不相等断言失败：key={exp_key}，预期={exp_val}，实际={act_val}")
+                        allure.attach(f"key={exp_key}\n预期结果：{exp_val}\n实际结果：{act_val}",
+                                      '不相等断言结果：失败', allure.attachment_type.TEXT)
         return flag
 
     def assert_mysql_data(self, expected_results):
@@ -125,6 +164,9 @@ class Assertions:
                         all_flag = all_flag + flag
                     elif k == 'eq':
                         flag = self.equal_assert(v, response, status_code)
+                        all_flag = all_flag + flag
+                    elif k == 'ne':
+                        flag = self.not_equal_assert(v, response, status_code)
                         all_flag = all_flag + flag
                     elif k == 'db':
                         flag = self.assert_mysql_data(v)
