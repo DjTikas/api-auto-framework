@@ -130,6 +130,26 @@ class Assertions:
                                       '不相等断言结果：失败', allure.attachment_type.TEXT)
         return flag
 
+    def assert_response_any(self, expected, response):
+        """
+        断言接口响应信息中的body的任何属性值
+        """
+        flag = 0
+        try:
+            exp_key = list(expected.keys())[0]
+            if exp_key in response:
+                act_value = response[exp_key]
+                rv_assert = operator.eq(act_value, list(expected.values())[0])
+                if rv_assert:
+                    logs.info("响应结果任意值断言成功")
+                else:
+                    flag += 1
+                    logs.error("响应结果任意值断言失败")
+        except Exception as e:
+            logs.error(e)
+            raise
+        return flag
+
     def assert_mysql_data(self, expected_results):
         """
         数据库断言
@@ -167,6 +187,9 @@ class Assertions:
                         all_flag = all_flag + flag
                     elif k == 'ne':
                         flag = self.not_equal_assert(v, response, status_code)
+                        all_flag = all_flag + flag
+                    elif k == 'any':
+                        flag = self.assert_response_any(v, response)
                         all_flag = all_flag + flag
                     elif k == 'db':
                         flag = self.assert_mysql_data(v)
