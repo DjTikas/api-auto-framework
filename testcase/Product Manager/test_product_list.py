@@ -2,7 +2,7 @@ import allure
 import pytest
 
 from base.apiutil import RequestBase
-from common.generateId import m_id, c_id
+from base.generateId import m_id, c_id
 from common.readyaml import get_testcase_yaml
 
 
