@@ -59,3 +59,6 @@ class OperationConfig:
 
     def get_report_type(self, option):
         return self.get_section_for_data('REPORT_TYPE', option)
+
+    def get_section_mysql(self, option):
+        return self.get_section_for_data('MYSQL', option)

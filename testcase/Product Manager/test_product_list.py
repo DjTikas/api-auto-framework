@@ -28,7 +28,7 @@ class TestProductManager:
     @allure.story(next(c_id) + '提交订单')
     @pytest.mark.run(order=3)
     @pytest.mark.parametrize('base_info, testcase', get_testcase_yaml('testcase/Product Manager/commitOrder.yaml'))
-    def test_get_commit_order(self, base_info, testcase):
+    def test_commit_order(self, base_info, testcase):
         allure.dynamic.title(testcase['case_name'])
         RequestBase().specification_yaml(base_info, testcase)
 
@@ -36,6 +36,6 @@ class TestProductManager:
     @allure.story(next(c_id) + '支付订单')
     @pytest.mark.run(order=4)
     @pytest.mark.parametrize('base_info, testcase', get_testcase_yaml('testcase/Product Manager/payOrder.yaml'))
-    def test_get_pay_order(self, base_info, testcase):
+    def test_pay_order(self, base_info, testcase):
         allure.dynamic.title(testcase['case_name'])
         RequestBase().specification_yaml(base_info, testcase)

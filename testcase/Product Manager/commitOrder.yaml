@@ -18,6 +18,7 @@
       validation:
         - contains: { error_code: '0000'}
         - contains: { message: '提交订单成功'}
+        - db: 'select * from customer_info'
       extract:
         orderNumber: $.orderNumber
         userId: $.userId

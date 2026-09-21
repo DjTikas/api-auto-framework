@@ -3,6 +3,7 @@ import operator
 import allure
 import jsonpath
 
+from common.connection import ConnectMysql
 from common.recordlog import logs
 
 
@@ -90,6 +91,21 @@ class Assertions:
                                       '相等断言结果：失败', allure.attachment_type.TEXT)
         return flag
 
+    def assert_mysql_data(self, expected_results):
+        """
+        数据库断言
+        :param expected_results: 预期结果，yaml文件的SQL语句
+        :return: 返回flag标识，0表示正常，非0表示测试不通过
+        """
+        flag = 0
+        conn = ConnectMysql()
+        db_value = conn.query_all(expected_results)
+        if db_value is not None:
+            logs.info("数据库断言成功")
+        else:
+            flag += 1
+            logs.error("数据库断言失败，请检查数据库是否存在该数据！")
+        return flag
 
     def assert_result(self, expected, response, status_code):
         """
@@ -109,6 +125,9 @@ class Assertions:
                         all_flag = all_flag + flag
                     elif k == 'eq':
                         flag = self.equal_assert(v, response, status_code)
+                        all_flag = all_flag + flag
+                    elif k == 'db':
+                        flag = self.assert_mysql_data(v)
                         all_flag = all_flag + flag
                     else:
                         logs.error("不支持此种断言方式")
