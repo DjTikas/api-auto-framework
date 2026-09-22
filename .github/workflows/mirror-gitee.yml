@@ -11,11 +11,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Mirror code to gitee
-        uses: Yikun/hub-mirror-action@master
+        uses: Yikun/hub-mirror-action@v1.4
         with:
           src: github/DjTikas
           dst: gitee/Dr_Tikas
           dst_token: ${{ secrets.GITEE_TOKEN }}
           static_list: "api-auto-framework"
           force_update: true
-          clone_style: https 
