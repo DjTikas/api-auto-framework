@@ -12,7 +12,7 @@ jobs:
           fetch-depth: 0
 
       - name: Mirror code to gitee
-        uses: Yikun/hub-mirror-action@v1.5
+        uses: Yikun/hub-mirror-action@master
         env:
           GITEE_REPO:  DJawsl/api-auto-framework
           GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
