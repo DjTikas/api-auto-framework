@@ -18,3 +18,4 @@ jobs:
           dst_token: ${{ secrets.GITEE_TOKEN }}
           static_list: "api-auto-framework"
           force_update: true
+          clone_style: https 
