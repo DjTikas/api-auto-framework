@@ -14,5 +14,5 @@ jobs:
       - name: Mirror code to gitee
         uses: Yikun/hub-mirror-action@v1.5
         env:
-          GITEE_REPO:  Dr_Tikas/api-auto-framework
+          GITEE_REPO:  DJawsl/api-auto-framework
           GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
