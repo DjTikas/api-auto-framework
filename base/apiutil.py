@@ -99,7 +99,11 @@ class RequestBase:
             res = self.run.run_main(name=api_name, url=url, case_name=case_name, headers=headers, method=method,
                                     file=files, cookies=cookies, **test_case)
             status_code = res.status_code
-            allure.attach(self.allure_attach_response(res.json()), '接口响应信息', allure.attachment_type.TEXT)
+            try:
+                resp_data = res.json()
+            except Exception:
+                resp_data = res.text
+            allure.attach(self.allure_attach_response(resp_data), '接口响应信息', allure.attachment_type.TEXT)
 
             try:
                 res_json = json.loads(res.text)  # 把json格式转换成字典
