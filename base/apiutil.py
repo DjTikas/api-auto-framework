@@ -4,7 +4,6 @@ from json import JSONDecodeError
 
 import allure
 import jsonpath
-from sklearn.utils import validation
 
 from common.assertions import Assertions
 from common.debugtalk import DebugTalk
