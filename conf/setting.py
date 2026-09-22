@@ -15,7 +15,7 @@ STREAM_LOG_LEVEL = logging.DEBUG  # 控制台
 API_TIMEOUT = 60
 
 # 是否发送钉钉消息
-dd_msg = True
+dd_msg = False
 
 # 文件路径
 FILE_PATH = {
