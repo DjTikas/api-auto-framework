@@ -2,7 +2,7 @@ name: Mirror to Gitee
 on:
   push:
     branches: [ main, master ]
-
+  workflow_dispatch:
 jobs:
   mirror:
     runs-on: ubuntu-latest
@@ -10,9 +10,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Mirror code to gitee
         uses: Yikun/hub-mirror-action@master
-        env:
-          GITEE_REPO:  DJawsl/api-auto-framework
-          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+        with:
+          src: github/DjTikas
+          dst: gitee/Dr_Tikas
+          dst_token: ${{ secrets.GITEE_TOKEN }}
+          static_list: "api-auto-framework"
+          force_update: true
