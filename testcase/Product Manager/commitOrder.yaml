@@ -20,7 +20,6 @@
         - contains: { message: '提交订单成功'}
         - ne: { error_code: '4000'}
         - any: { error_code: '0000', message: '提交订单成功'}
-        - db: 'select * from customer_info'
       extract:
         orderNumber: $.orderNumber
         userId: $.userId
