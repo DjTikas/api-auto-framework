@@ -1,9 +1,20 @@
+import os
 import urllib.parse
 import requests
 import time
 import hmac
 import hashlib
 import base64
+
+from common.recordlog import logs
+from dotenv import load_dotenv
+
+# 加载本地 .env 文件；CI环境不存在该文件会自动跳过，不会抛异常
+load_dotenv(override=False)
+
+# 钉钉机器人密钥，从环境变量读取，避免硬编码泄露
+DINGTALK_ACCESS_TOKEN = os.environ.get('DINGTALK_ACCESS_TOKEN', '')
+DINGTALK_SECRET = os.environ.get('DINGTALK_SECRET', '')
 
 
 def generate_sign():
@@ -15,10 +26,8 @@ def generate_sign():
     """
     # 当前时间戳
     timestamp = str(round(time.time() * 1000))
-    # 钉钉机器人中的加签密钥
-    secret = 'SEC43aa7e29aab461d8b7df426c75327ca5614032b27a2effa0f01367cc2cc6b409'
-    secret_enc = secret.encode('utf-8')
-    str_to_sign = '{}\n{}'.format(timestamp, secret)
+    secret_enc = DINGTALK_SECRET.encode('utf-8')
+    str_to_sign = '{}\n{}'.format(timestamp, DINGTALK_SECRET)
     # 转成byte类型
     str_to_sign_enc = str_to_sign.encode('utf-8')
     hmac_code = hmac.new(secret_enc, str_to_sign_enc, digestmod=hashlib.sha256).digest()
@@ -33,9 +42,13 @@ def send_dd_msg(content_str, at_all=True):
     :param at_all: @全员，默认为True
     :return:
     """
+    if not DINGTALK_ACCESS_TOKEN or not DINGTALK_SECRET:
+        logs.error('钉钉机器人密钥未配置，请设置环境变量 DINGTALK_ACCESS_TOKEN 和 DINGTALK_SECRET')
+        return ''
+
     timestamp_and_sign = generate_sign()
     # url(钉钉机器人Webhook地址) + timestamp + sign
-    url = f'https://oapi.dingtalk.com/robot/send?access_token=8f8de1e08b9425bb204d3193eeeca2f42549c64bd71acf2cd7ef55945e29cd52&timestamp={timestamp_and_sign[0]}&sign={timestamp_and_sign[1]}'
+    url = f'https://oapi.dingtalk.com/robot/send?access_token={DINGTALK_ACCESS_TOKEN}&timestamp={timestamp_and_sign[0]}&sign={timestamp_and_sign[1]}'
     headers = {'Content-Type': 'application/json;charset=utf-8'}
     data = {
         "msgtype": "text",

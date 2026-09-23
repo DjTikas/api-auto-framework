@@ -1,4 +1,6 @@
 /report/temp/*
 /logs/
+/extract.yaml
 
 /.idea/
+/.env

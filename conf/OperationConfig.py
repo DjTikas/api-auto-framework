@@ -1,4 +1,5 @@
 import configparser
+import os
 import sys
 import traceback
 
@@ -61,4 +62,9 @@ class OperationConfig:
         return self.get_section_for_data('REPORT_TYPE', option)
 
     def get_section_mysql(self, option):
+        """读取MySQL配置，敏感字段优先从环境变量获取（MYSQL_HOST/MYSQL_PORT/MYSQL_USERNAME/MYSQL_PASSWORD/MYSQL_DATABASE）"""
+        env_key = 'MYSQL_{}'.format(option.upper())
+        env_value = os.environ.get(env_key)
+        if env_value:
+            return env_value
         return self.get_section_for_data('MYSQL', option)
